@@ -1,10 +1,17 @@
 import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as morgan from "morgan";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService)
+  console.log(configService.get("PORT_SERVER"))
+
+  app.use(morgan("dev")); //*Morgan para ver las peticiones que se hacen al servidor
 
   app.setGlobalPrefix("/api/v1"); //*Este es el prefijo que se le agrega a todas las rutas
 
@@ -26,6 +33,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api-docs", app, document);
 
-  await app.listen(3000); //*Puerto en el que se ejecuta la aplicación
+  await app.listen(configService.get("PORT_SERVER")); //*Puerto en el que se ejecuta la aplicación
 }
 bootstrap();
