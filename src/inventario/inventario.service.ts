@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateInventarioDto } from './dto/create-inventario.dto';
@@ -7,6 +7,7 @@ import { Inventario } from './entities/inventario.entity';
 
 @Injectable()
 export class InventarioService {
+ 
 
   //* Se inyecta el repositorio de inventario
   constructor(
@@ -26,8 +27,12 @@ export class InventarioService {
     return await this.inventarioRepository.save(inventario);
   }
 
-  async findOne(id: number) {
-    return await this.inventarioRepository.findOneBy({id});
+   async findOne(id: number): Promise<Inventario | undefined> {
+    const inventario = await this.inventarioRepository.findOneBy({id});
+    if (!inventario) {
+      throw new NotFoundException(`Inventario con ID ${id} no encontrado`);
+    }
+    return inventario;
   }
 
   async update(id: number, updateInventarioDto: UpdateInventarioDto) {
