@@ -25,8 +25,8 @@ async function bootstrap() {
 
   // Configuración de Swagger
   const config = new DocumentBuilder()
-    .setTitle("Nombre de tu API")
-    .setDescription("Descripción de tu API")
+    .setTitle("SHOP PRODUCTS")
+    .setDescription("Controladores de la aplicación")
     .setVersion("1.0")
     .build();
 
